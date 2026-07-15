@@ -45,27 +45,15 @@ class DataMonitor:
         report = []
         for sample in self._sample_repo.list_all():
             demand = demand_by_sample.get(sample.sample_id, 0)
-            percentage = self._remaining_ratio(sample.stock, demand)
             report.append(
                 {
                     "sample_id": sample.sample_id,
                     "name": sample.name,
                     "stock": sample.stock,
                     "status": self.stock_status(sample, demand),
-                    "percentage": round(percentage, 1),
                 }
             )
         return report
-
-    @staticmethod
-    def _remaining_ratio(stock, pending_demand):
-        """대기 수요를 채우고 남는 재고의 비율. 수요가 재고보다 많으면(음수) 0%로 클램프한다."""
-        if stock <= 0:
-            return 0.0
-        if pending_demand <= 0:
-            return 100.0
-        ratio = (stock - pending_demand) / stock * 100
-        return round(max(0.0, min(100.0, ratio)), 1)
 
     def snapshot(self):
         samples = self._sample_repo.list_all()

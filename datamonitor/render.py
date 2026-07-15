@@ -1,7 +1,6 @@
 import unicodedata
 
 WIDTH = 64
-BAR_WIDTH = 20
 
 
 def _rule(char="-"):
@@ -19,11 +18,6 @@ def _ljust(text, width):
 
 def _rjust(text, width):
     return " " * max(0, width - _display_width(text)) + text
-
-
-def _bar(percentage):
-    filled = round(BAR_WIDTH * percentage / 100)
-    return "#" * filled + "-" * (BAR_WIDTH - filled)
 
 
 def render_dashboard(snapshot, timestamp):
@@ -45,11 +39,10 @@ def render_dashboard(snapshot, timestamp):
     lines.append(_rule())
 
     lines.append(" 재고 현황")
-    lines.append(f" {_ljust('시료명', 20)}{_rjust('재고', 10)}   {_ljust('상태', 4)} 잔여율")
+    lines.append(f" {_ljust('시료명', 20)}{_rjust('재고', 10)}   {_ljust('상태', 4)}")
     for row in snapshot["stock_report"]:
         lines.append(
             f" {_ljust(row['name'], 20)}{row['stock']:>7,} ea   {_ljust(row['status'], 4)}"
-            f" [{_bar(row['percentage'])}] {row['percentage']:>5.1f}%"
         )
     lines.append(_rule())
     lines.append(" (Ctrl+C 로 종료)")

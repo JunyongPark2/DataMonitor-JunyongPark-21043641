@@ -60,21 +60,6 @@ def test_stock_report_matches_expected_statuses(monitor):
     assert report["S-001"]["status"] == STOCK_SUFFICIENT
     assert report["S-003"]["status"] == STOCK_SHORTAGE
     assert report["S-005"]["status"] == STOCK_DEPLETED
-    assert report["S-005"]["percentage"] == 0.0
-
-
-def test_remaining_ratio_full_when_no_demand():
-    assert DataMonitor._remaining_ratio(100, 0) == 100.0
-
-
-def test_remaining_ratio_clamped_to_zero_when_demand_exceeds_stock():
-    # stock=30, demand=200 -> (30-200)/30 is negative, clamp to 0
-    assert DataMonitor._remaining_ratio(30, 200) == 0.0
-
-
-def test_remaining_ratio_reflects_surplus_left_after_demand():
-    # stock=480, demand=150 -> (480-150)/480 * 100
-    assert DataMonitor._remaining_ratio(480, 150) == 68.8
 
 
 def test_snapshot_aggregates_totals(monitor):

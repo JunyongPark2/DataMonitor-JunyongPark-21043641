@@ -59,13 +59,12 @@ class DataMonitor:
 
     @staticmethod
     def _remaining_ratio(stock, pending_demand):
-        """대기 수요 대비 재고 충족률. stock_status()의 여유/부족 경계(stock == pending_demand)에서
-        정확히 100%가 되어 상태 라벨과 값이 어긋나지 않도록 한다."""
+        """대기 수요를 채우고 남는 재고의 비율. 수요가 재고보다 많으면(음수) 0%로 클램프한다."""
         if stock <= 0:
             return 0.0
         if pending_demand <= 0:
             return 100.0
-        ratio = min(stock / pending_demand, 1.0) * 100
+        ratio = (stock - pending_demand) / stock * 100
         return round(max(0.0, min(100.0, ratio)), 1)
 
     def snapshot(self):

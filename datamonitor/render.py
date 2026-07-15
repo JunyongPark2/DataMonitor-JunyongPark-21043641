@@ -1,9 +1,24 @@
+import unicodedata
+
 WIDTH = 64
 BAR_WIDTH = 20
 
 
 def _rule(char="-"):
     return char * WIDTH
+
+
+def _display_width(text):
+    """한글 등 전각 문자는 터미널에서 2칸을 차지하므로, len()이 아닌 실제 표시 폭을 센다."""
+    return sum(2 if unicodedata.east_asian_width(ch) in ("F", "W") else 1 for ch in text)
+
+
+def _ljust(text, width):
+    return text + " " * max(0, width - _display_width(text))
+
+
+def _rjust(text, width):
+    return " " * max(0, width - _display_width(text)) + text
 
 
 def _bar(percentage):
@@ -30,10 +45,10 @@ def render_dashboard(snapshot, timestamp):
     lines.append(_rule())
 
     lines.append(" 재고 현황")
-    lines.append(f" {'시료명':<20}{'재고':>10}   {'상태':<4} 잔여율")
+    lines.append(f" {_ljust('시료명', 20)}{_rjust('재고', 10)}   {_ljust('상태', 4)} 잔여율")
     for row in snapshot["stock_report"]:
         lines.append(
-            f" {row['name']:<20}{row['stock']:>7,} ea   {row['status']:<4}"
+            f" {_ljust(row['name'], 20)}{row['stock']:>7,} ea   {_ljust(row['status'], 4)}"
             f" [{_bar(row['percentage'])}] {row['percentage']:>5.1f}%"
         )
     lines.append(_rule())

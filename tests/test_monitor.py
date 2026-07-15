@@ -68,8 +68,13 @@ def test_remaining_ratio_full_when_no_demand():
 
 
 def test_remaining_ratio_partial_when_demand_exceeds_stock():
-    # stock=30, demand=200 -> 30 / (30+200) * 100
-    assert DataMonitor._remaining_ratio(30, 200) == 13.0
+    # stock=30, demand=200 -> min(30/200, 1) * 100
+    assert DataMonitor._remaining_ratio(30, 200) == 15.0
+
+
+def test_remaining_ratio_capped_at_full_when_stock_exceeds_demand():
+    # stock=480, demand=150 -> min(480/150, 1) * 100, capped at 100
+    assert DataMonitor._remaining_ratio(480, 150) == 100.0
 
 
 def test_snapshot_aggregates_totals(monitor):

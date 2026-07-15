@@ -23,6 +23,10 @@ python -m datamonitor.app --data-dir path # 다른 데이터 디렉터리 조회
 python -m datamonitor.app --data-dir ../DataPersistence/data --once  # DataPersistence의 실제 데이터 조회
 ```
 
+`--data-dir`로 지정한 경로가 존재하지 않으면 에러 없이 빈 `samples.json`/`orders.json`을 새로
+생성합니다. 경로를 잘못 입력해도 조용히 빈 데이터셋을 보여줄 수 있으니, 다른 PoC의 데이터가
+보이지 않는다면 오타부터 의심하세요.
+
 ## 테스트
 
 ```bash
